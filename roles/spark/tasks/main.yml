@@ -1,0 +1,78 @@
+---
+- name: Install java
+  become: yes
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: Create spark user group
+  become: yes
+  group:
+    name: spark
+    state: present
+
+- name: Create spark user
+  become: yes
+  user:
+    name: spark
+    group: spark
+    state: present
+
+- name: Download scala
+  get_url:
+    url: "{{ scala_release_url }}/scala/{{ scala_version }}/scala-{{ scala_version }}.rpm"
+    dest: /tmp
+
+- name: Install scala
+  become: yes
+  yum:
+    name: "/tmp/scala-{{ scala_version }}.rpm"
+    state: present
+
+- name: Create spark directory
+  become: yes
+  file:
+    path: /opt/spark
+    state: directory
+    owner: spark
+    group: spark
+    mode: 0755
+
+- name: Download and install Spark binaries
+  become: yes
+  unarchive:
+    remote_src: true
+    creates: "/opt/spark/.done-spark-{{ spark_version }}"
+    src: "{{ spark_release_url }}/spark-{{ spark_version }}-bin-hadoop2.7.tgz"
+    dest: /opt/spark
+    owner: spark
+    group: spark
+
+- name: Symlink current spark
+  become: yes
+  file:
+    path: /opt/spark/current
+    src: "/opt/spark/spark-{{ spark_version }}-bin-hadoop2.7"
+    state: link
+    owner: spark
+    group: spark
+    mode: 0755
+
+- name: Configure Spark
+  become: yes 
+  template:
+    src: "templates/{{ item.name }}.j2"
+    dest: "/opt/spark/current/conf/{{ item.name }}"
+    owner: spark
+    group: spark 
+    mode: "{{ item.mode }}"
+  with_items:
+    - { name: "spark-defaults.conf", mode: "0644" }
+    - { name: "spark-env.sh", mode: "0755" }      
+
+- name: Add Spark bin directory to PATH
+  become: yes
+  template: 
+    src: "templates/spark.sh.j2"
+    dest: "/etc/profile.d/spark.sh"
+    mode: 0644

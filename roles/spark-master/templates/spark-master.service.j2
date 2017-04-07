@@ -1,0 +1,13 @@
+[Unit]
+Description=spark-master
+Documentation=http://spark.apache.org/
+
+[Service]
+Environment=SPARK_NO_DAEMONIZE=true
+ExecStart=/opt/spark/current/sbin/start-master.sh
+Restart=on-failure
+RestartSec=5
+User=spark
+
+[Install]
+WantedBy=multi-user.target

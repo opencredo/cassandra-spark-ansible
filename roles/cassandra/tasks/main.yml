@@ -1,0 +1,94 @@
+---
+- name: Install java
+  become: yes
+  yum:
+    name: java-1.8.0-openjdk
+    state: present
+
+- name: Create cassandra user group
+  become: yes
+  group:
+    name: cassandra
+    state: present
+
+- name: Create cassandra user
+  become: yes
+  user:
+    name: cassandra
+    group: cassandra
+    state: present
+    
+- name: Create cassandra directory
+  become: yes
+  file:
+    path: /opt/cassandra
+    state: directory
+    owner: cassandra
+    group: cassandra
+    mode: 0755
+
+- name: Download and install Cassandra binaries
+  become: yes
+  unarchive:
+    creates: "/opt/cassandra/.done-cassandra-{{ cassandra_version }}"
+    remote_src: true
+    src: "{{ cassandra_release_url }}/{{ cassandra_version }}/apache-cassandra-{{ cassandra_version }}-bin.tar.gz"
+    dest: /opt/cassandra
+    owner: cassandra
+    group: cassandra 
+
+- name: Symlink current cassandra
+  become: yes
+  file:
+    path: /opt/cassandra/current
+    src: /opt/cassandra/apache-cassandra-{{ cassandra_version }}
+    state: link
+    owner: cassandra
+    group: cassandra
+    mode: 0755
+
+- name: Add Cassandra bin directory to PATH
+  become: yes
+  template: 
+    src: "templates/cassandra.sh.j2"
+    dest: "/etc/profile.d/cassandra.sh"
+    mode: 0644
+
+- name: Create cassandra data directory
+  become: yes
+  file:
+    path: /var/lib/cassandra
+    owner: cassandra
+    group: cassandra
+    mode: 0700
+    state: directory
+
+- name: Configure Cassandra
+  become: yes 
+  template:
+    src: templates/cassandra.yaml.j2
+    dest: /opt/cassandra/current/conf/cassandra.yaml
+    owner: cassandra
+    group: cassandra
+    mode: 0644 
+  notify: restart cassandra  
+
+- name: Change owner of cassandra directory
+  become: yes
+  file:
+    recurse: yes
+    path: /opt/cassandra
+    state: directory
+    owner: cassandra
+    group: cassandra
+    mode: 0755
+
+- name: Install cassandra service
+  become: yes
+  template:
+    src: templates/cassandra.service.j2
+    dest: /etc/systemd/system/cassandra.service
+    mode: 644 
+  notify: restart cassandra
+    
+

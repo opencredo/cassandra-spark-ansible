@@ -1,0 +1,13 @@
+[Unit]
+Description=spark-slave
+Documentation=http://spark.apache.org/
+
+[Service]
+Environment=SPARK_NO_DAEMONIZE=true
+ExecStart=/opt/spark/current/sbin/start-slave.sh spark://{{ spark_master_address }}:7077
+Restart=on-failure
+RestartSec=5
+User=spark
+
+[Install]
+WantedBy=multi-user.target

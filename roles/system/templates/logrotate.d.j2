@@ -1,0 +1,15 @@
+{{ path }} {
+  {% if options is defined -%}
+  {% for option in options -%}
+  {{ option }}
+  {% endfor -%}
+  {% endif -%}
+  {%- if scripts is defined -%}
+  {% for script in scripts -%}
+  {{ script.0.name }}
+    {{ script.1.action }}
+  endscript
+  {% endfor -%}
+  {% endif -%}
+
+}

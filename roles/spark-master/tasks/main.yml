@@ -1,0 +1,8 @@
+---
+- name: Install spark master service
+  become: yes
+  template:
+    src: templates/spark-master.service.j2
+    dest: /etc/systemd/system/spark-master.service
+    mode: 0644 
+  notify: restart spark-master

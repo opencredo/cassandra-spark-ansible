@@ -1,0 +1,7 @@
+---
+- name: restart spark-slave
+  become: yes
+  systemd: 
+    name: spark-slave
+    state: restarted
+    daemon_reload: yes    

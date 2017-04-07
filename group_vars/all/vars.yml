@@ -1,0 +1,23 @@
+---
+
+scala_version: "2.11.8"
+scala_release_url: "http://downloads.lightbend.com"
+
+cassandra_version: "3.10"
+cassandra_release_url: "http://archive.apache.org/dist/cassandra"
+
+spark_version: "2.1.0"
+spark_release_url: "http://d3kbcqa49mib13.cloudfront.net"
+
+cidr_vpc: "10.0.0.0/16"
+
+cassandra_cluster_name: 'TestCluster'
+
+cassandra_seed_node_list: "{{ groups['cassandra_seed'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
+cassandra_seed_nodes: "{{ groups['cassandra_seed'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | join(',') }}"
+
+spark_master_address_list: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
+spark_master_address: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | first }}"
+
+cassandra_all_node_list: "{{ groups['cassandra_all'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
+cassandra_all_nodes: "{{ groups['cassandra_all'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | join(',') }}"

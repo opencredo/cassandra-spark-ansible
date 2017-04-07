@@ -1,0 +1,4 @@
+---
+- name: 'Install dig'
+  become: yes
+  yum: name='bind-utils' state='present'

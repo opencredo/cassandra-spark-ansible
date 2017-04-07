@@ -1,0 +1,14 @@
+---
+
+- name: 'Install Logrotate'
+  yum: name='logrotate'  state='present'
+
+- name: 'Configure items in /etc/logrotate.d/'
+  template:
+    src: 'logrotate.d.j2'
+    dest: '/etc/logrotate.d/{{ name }}.conf'
+  when: name is defined
+
+- name: 'Fix non-working default Logwatch config'
+  become: yes
+  copy: src='syslog' dest='/etc/logrotate.d/syslog' mode='0644' owner='root' group='root'

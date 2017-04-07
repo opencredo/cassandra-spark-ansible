@@ -1,0 +1,22 @@
+---
+
+- name: 'Install utility: tcpdump'
+  become: true
+  yum: name='tcpdump' state='installed'
+
+- name: 'Install utility: lsof'
+  become: true
+  yum: name='lsof' state='installed'
+
+- name: 'Install utility: rsync'
+  become: true
+  yum: name='rsync' state='installed'
+
+- name: 'Install utility: nmap'
+  become: true
+  yum: name='nmap' state='installed'
+
+- name: 'Install utility: deltarpm'
+  become: true
+  yum: name='deltarpm' state='installed'
+  

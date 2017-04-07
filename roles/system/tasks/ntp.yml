@@ -1,0 +1,23 @@
+---
+
+- name: 'Install NTP Service'
+  become: yes
+  yum: name='ntp'  state='present'
+
+- name: 'Ensure NTP Enabled'
+  become: yes
+  service:
+    name: ntpd
+    enabled: yes
+
+- name: 'Ensure NTP Stoped'
+  become: yes
+  service: name=ntpd state=stopped
+
+- name: 'Update NTP With AWS Time Server'
+  become: yes
+  shell: 'ntpdate 0.amazon.pool.ntp.org'
+
+- name: 'Ensure NTP Started'
+  become: yes
+  service: name=ntpd state=started

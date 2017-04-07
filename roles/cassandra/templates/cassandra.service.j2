@@ -1,0 +1,12 @@
+[Unit]
+Description=cassandra
+Documentation=http://cassandra.apache.org/
+
+[Service]
+ExecStart=/opt/cassandra/current/bin/cassandra -f
+Restart=on-failure
+RestartSec=5
+User=cassandra
+
+[Install]
+WantedBy=multi-user.target

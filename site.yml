@@ -1,0 +1,23 @@
+---
+- name: Set up cassandra seed / sparkmaster
+  hosts: cassandra_seed
+  remote_user: centos
+
+  pre_tasks:
+    - meta: refresh_inventory
+
+  roles:
+    - cassandra
+    - spark-master
+    - spark-slave
+
+- name: Set up cassandra nodes / spark slaves
+  hosts: cassandra_node
+  remote_user: centos
+
+  pre_tasks:
+    - meta: refresh_inventory
+
+  roles:
+    - cassandra
+    - spark-slave
