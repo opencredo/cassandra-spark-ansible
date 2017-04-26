@@ -26,6 +26,6 @@
 # spark.driver.memory              5g
 # spark.executor.extraJavaOptions  -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
 
-spark.master                        spark://{{ spark_master_address }}:7077
-spark.jars.packages                 datastax:spark-cassandra-connector:2.0.0-s_2.11
-spark.cassandra.connection.host     {{ cassandra_all_nodes }}
+spark.master                        spark://{{ spark.master_address }}:7077
+spark.jars.packages                 datastax:spark-cassandra-connector:{{ spark.cassandra_connector_version }}-s_{{ scala_minor_version }}
+spark.cassandra.connection.host     {{ cassandra.all_nodes }}

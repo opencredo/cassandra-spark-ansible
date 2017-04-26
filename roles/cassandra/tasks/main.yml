@@ -27,12 +27,17 @@
     group: cassandra
     mode: 0755
 
-- name: Download and install Cassandra binaries
+- name: Download Cassandra binaries
+  get_url:
+    url: "{{ cassandra.release_url }}/{{ cassandra.version }}/apache-cassandra-{{ cassandra.version }}-bin.tar.gz"
+    dest: /tmp
+
+- name: Unpack Cassandra binaries
   become: yes
   unarchive:
-    creates: "/opt/cassandra/.done-cassandra-{{ cassandra_version }}"
-    remote_src: true
-    src: "{{ cassandra_release_url }}/{{ cassandra_version }}/apache-cassandra-{{ cassandra_version }}-bin.tar.gz"
+    creates: "/opt/cassandra/apache-cassandra-{{ cassandra.version }}/bin/cassandra"
+    remote_src: yes
+    src: /tmp/apache-cassandra-{{ cassandra.version }}-bin.tar.gz
     dest: /opt/cassandra
     owner: cassandra
     group: cassandra 
@@ -41,7 +46,7 @@
   become: yes
   file:
     path: /opt/cassandra/current
-    src: /opt/cassandra/apache-cassandra-{{ cassandra_version }}
+    src: /opt/cassandra/apache-cassandra-{{ cassandra.version }}
     state: link
     owner: cassandra
     group: cassandra

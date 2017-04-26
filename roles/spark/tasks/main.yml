@@ -18,15 +18,10 @@
     group: spark
     state: present
 
-- name: Download scala
-  get_url:
-    url: "{{ scala_release_url }}/scala/{{ scala_version }}/scala-{{ scala_version }}.rpm"
-    dest: /tmp
-
 - name: Install scala
   become: yes
   yum:
-    name: "/tmp/scala-{{ scala_version }}.rpm"
+    name: "{{ scala.release_url }}/scala/{{ scala.version }}/scala-{{ scala.version }}.rpm"
     state: present
 
 - name: Create spark directory
@@ -38,12 +33,17 @@
     group: spark
     mode: 0755
 
-- name: Download and install Spark binaries
+- name: Download Spark binaries
+  get_url:
+    url: "{{ spark.release_url }}/spark-{{ spark.version }}-bin-hadoop2.7.tgz"
+    dest: /tmp
+  
+- name: Unpack Spark binaries
   become: yes
   unarchive:
-    remote_src: true
-    creates: "/opt/spark/.done-spark-{{ spark_version }}"
-    src: "{{ spark_release_url }}/spark-{{ spark_version }}-bin-hadoop2.7.tgz"
+    creates: "/opt/spark/spark-{{ spark.version }}-bin-hadoop2.7/bin/spark-submit"
+    remote_src: yes
+    src: "/tmp/spark-{{ spark.version }}-bin-hadoop2.7.tgz"
     dest: /opt/spark
     owner: spark
     group: spark
@@ -52,7 +52,7 @@
   become: yes
   file:
     path: /opt/spark/current
-    src: "/opt/spark/spark-{{ spark_version }}-bin-hadoop2.7"
+    src: "/opt/spark/spark-{{ spark.version }}-bin-hadoop2.7"
     state: link
     owner: spark
     group: spark

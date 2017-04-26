@@ -1,23 +1,34 @@
 ---
 
-scala_version: "2.11.8"
-scala_release_url: "http://downloads.lightbend.com"
+scala:
+  version: "2.11.8"
+  release_url: "http://downloads.lightbend.com"
 
-cassandra_version: "3.10"
-cassandra_release_url: "http://archive.apache.org/dist/cassandra"
+#need this to be a separate variable to avoid recursion error 
+scala_minor_version: "{{ scala.version | regex_replace('^([0-9]+)\\.([0-9]+)\\..*', '\\1\\.\\2')}}"
 
-spark_version: "2.1.0"
-spark_release_url: "http://d3kbcqa49mib13.cloudfront.net"
+cassandra:
+  version: "3.10"
+  release_url: "http://archive.apache.org/dist/cassandra"
+  endpoint_snitch: 'SimpleSnitch'
+  cluster_name: 'TestCluster'
+  seed_node_list: "{{ groups['cassandra_seed'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
+  seed_nodes: "{{ groups['cassandra_seed'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | join(',') }}"
+  all_node_list: "{{ groups['cassandra_all'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
+  all_nodes: "{{ groups['cassandra_all'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | join(',') }}"
+
+spark:
+  version: "2.1.0"
+  release_url: "http://d3kbcqa49mib13.cloudfront.net"
+  cassandra_connector_version: "2.0.0"
+  master_address_list: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
+  master_address: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | first }}"
 
 cidr_vpc: "10.0.0.0/16"
 
-cassandra_cluster_name: 'TestCluster'
+ulimit:
+  soft: 65536
+  hard: 65536
 
-cassandra_seed_node_list: "{{ groups['cassandra_seed'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
-cassandra_seed_nodes: "{{ groups['cassandra_seed'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | join(',') }}"
-
-spark_master_address_list: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
-spark_master_address: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | first }}"
-
-cassandra_all_node_list: "{{ groups['cassandra_all'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
-cassandra_all_nodes: "{{ groups['cassandra_all'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | join(',') }}"
+healthchecks:
+  - 'check_health_cassandra'
