@@ -2,14 +2,14 @@
 
 scala:
   version: "2.11.8"
-  release_url: "http://downloads.lightbend.com"
+  release_url: "https://downloads.lightbend.com"
 
 #need this to be a separate variable to avoid recursion error 
 scala_minor_version: "{{ scala.version | regex_replace('^([0-9]+)\\.([0-9]+)\\..*', '\\1\\.\\2')}}"
 
 cassandra:
   version: "3.10"
-  release_url: "http://archive.apache.org/dist/cassandra"
+  release_url: "https://archive.apache.org/dist/cassandra"
   endpoint_snitch: 'SimpleSnitch'
   cluster_name: 'TestCluster'
   seed_node_list: "{{ groups['cassandra_seed'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
@@ -19,7 +19,7 @@ cassandra:
 
 spark:
   version: "2.1.0"
-  release_url: "http://d3kbcqa49mib13.cloudfront.net"
+  release_url: "https://d3kbcqa49mib13.cloudfront.net"
   cassandra_connector_version: "2.0.0"
   master_address_list: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | list }}"
   master_address: "{{ groups['spark_master'] | map('extract', hostvars, 'ec2_private_ip_address' ) | ipaddr(cidr_vpc) | first }}"
