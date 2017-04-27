@@ -1,12 +1,9 @@
 ---
 
+# Changing Ulimit configuration - allow Cassandra to have more files open than the default
 - name: 'Ulimit'
   include: ulimit.yml
   when: ulimit is defined
-
-- name: 'TCP'
-  include: tcp.yml
-  #when: timewait is defined
 
 - name: 'Install dns utils'
   include: dns.yml
@@ -17,8 +14,6 @@
 - name: 'Install Common Tools'
   include: tooling.yml
 
+# Cassandra nodes should run with clocks in sync - set up NTP for that
 - name: 'Install NTP Configuration'
   include: ntp.yml
-
-- name: 'Install other utilities'
-  include: utils.yml  

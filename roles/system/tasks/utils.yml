@@ -1,5 +1,0 @@
----
-
-- name: 'Install wget'
-  become: yes
-  yum: name='wget'  state='present'

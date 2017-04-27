@@ -1,5 +1,6 @@
 ---
 
+# Changing Ulimit configuration - allow Cassandra to have more files open than the default
 - name: 'Create ulimit configuration'
   become: yes
   template:

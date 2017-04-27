@@ -6,7 +6,7 @@
 # /NOTE
 
 
-cluster_name: {{ cassandra.cluster_name | default("cassandra") }}
+cluster_name: {{ cassandra.cluster_name }}
 num_tokens: 256
 
 hinted_handoff_enabled: true
@@ -105,7 +105,7 @@ truncate_request_timeout_in_ms: 60000
 request_timeout_in_ms: 10000
 cross_node_timeout: false
 
-endpoint_snitch: {{ cassandra.endpoint_snitch | default("SimpleSnitch")}}
+endpoint_snitch: {{ cassandra.endpoint_snitch }}
 dynamic_snitch_update_interval_in_ms: 100
 dynamic_snitch_reset_interval_in_ms: 600000
 dynamic_snitch_badness_threshold: 0.1

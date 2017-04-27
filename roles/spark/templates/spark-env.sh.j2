@@ -65,5 +65,5 @@
 # - SPARK_NICENESS      The scheduling priority for daemons. (Default: 0)
 # - SPARK_NO_DAEMONIZE  Run the proposed command in the foreground. It will not output a PID file.
 
-export SPARK_LOCAL_IP={{ ansible_eth0.ipv4.address }}
+export SPARK_LOCAL_IP={{ ansible_default_ipv4.address }}
 export SPARK_MASTER_HOST={{ spark.master_address }}
